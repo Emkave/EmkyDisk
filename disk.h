@@ -1,0 +1,37 @@
+#ifndef DISK_H
+#define DISK_H
+#include "SFML/Graphics.hpp"
+#include "settings.h"
+#include "segment.h"
+#include <filesystem>
+#include <queue>
+
+using namespace sf;
+
+namespace EDisk {
+    class Disk {
+    private:
+        uintmax_t capacity = 0;
+        uintmax_t available = 0;
+        uintmax_t used = 0;
+        float used_percent = 0;
+
+        std::wstring root;
+
+        std::unordered_map<std::wstring, Segment> disk;
+
+    public:
+        bool set_path(const std::filesystem::path & path);
+        bool scan();
+
+        static uintmax_t get_depth(const std::filesystem::path & target, const std::filesystem::path & root);
+
+        inline uintmax_t get_capacity(void) const noexcept {return this->capacity;}
+        inline uintmax_t get_available(void) const noexcept {return this->available;}
+        inline uintmax_t get_used(void) const noexcept {return this->used;}
+        inline float get_usage_percent(void) const noexcept {return this->used_percent;}
+        inline std::unordered_map<std::wstring, Segment> & get_disk(void) noexcept {return this->disk;}
+    };
+}
+
+#endif //DISK_H
