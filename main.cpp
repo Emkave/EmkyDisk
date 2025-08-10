@@ -1,9 +1,8 @@
-#include <filesystem>
+﻿#include <filesystem>
 #include <iostream>
-
 #include "disk.h"
 #include "SFML/Graphics.hpp"
-#include "vld.h"
+//#include "vld.h"
 #include "settings.h"
 
 using namespace sf;
@@ -32,11 +31,11 @@ const float PI = 3.14159265f;
 
 int main() {
     EDisk::Disk disk;
-    const std::string path = "C:/Users/rcybe/Desktop/Архивы";
-    std::cout << path << std::endl;
+    const std::wstring path = L"C:/Users/rcybe/Desktop/Архивы";
+    disk.set_path(path);
 
-    //disk.set_path(path);
-    //disk.scan();
+
+    disk.scan();
 
 
 
@@ -59,7 +58,6 @@ int main() {
 
     Clock clock;
     //EDisk::Disk disk ("D:/");
-
 
     while (window->isOpen()) {
         while (const std::optional event = window->pollEvent()) {

@@ -1,10 +1,12 @@
 #include "segment.h"
 
+#include <utility>
+
 using namespace sf;
 using namespace EDisk;
 
 
-Segment::Segment(const std::filesystem::path && filename, const uintmax_t && depth) : depth(depth), filename(filename.wstring()) {
+Segment::Segment(std::filesystem::path path, const uintmax_t && depth) : depth(depth), path(std::move(path)) {
     this->setFillColor(Color::White);
     this->setRadius(60);
     this->setPosition({300, 200});
