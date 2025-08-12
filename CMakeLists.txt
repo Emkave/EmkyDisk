@@ -8,7 +8,8 @@ add_executable(EmkyDisk main.cpp
         settings.h
         segment.h
         segment.cpp
-        disk.cpp)
+        disk.cpp
+)
 
 
 set(SFML_STATIC_LIBRARIES TRUE)
@@ -25,10 +26,10 @@ include_directories(${CMAKE_SOURCE_DIR}/include/glad)
 include_directories(${CMAKE_SOURCE_DIR}/include/KHR)
 include_directories(${CMAKE_SOURCE_DIR})
 
-set(VLD_DIR "D:/Visual Leak Detector")
-include_directories(${VLD_DIR}/include)
-link_directories(${VLD_DIR}/lib/Win64)
-add_definitions(-DVLDBUILD)
+#set(VLD_DIR "D:/Visual Leak Detector")
+#include_directories(${VLD_DIR}/include)
+#link_directories(${VLD_DIR}/lib/Win64)
+#add_definitions(-DVLDBUILD)
 
-target_link_libraries(EmkyDisk PRIVATE glfw3 opengl32 SFML::System SFML::Window SFML::Graphics SFML::Audio vld)
+target_link_libraries(EmkyDisk PRIVATE glfw3 opengl32 SFML::System SFML::Window SFML::Graphics SFML::Audio)
 target_include_directories(EmkyDisk PRIVATE ${CMAKE_SOURCE_DIR}/glad ${CMAKE_SOURCE_DIR}/include ${GLFW_LIB_DIR})

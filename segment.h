@@ -8,24 +8,29 @@ using namespace sf;
 
 
 namespace EDisk {
-    class Segment;
-
-
-
-    class Segment final : public CircleShape {
+    class Segment {
     private:
-        const uintmax_t depth = 0;
-        const std::filesystem::path path;
+        CircleShape * shape = nullptr;
 
-        std::list<std::wstring> sub_segments;
-        std::list<std::wstring> files;
+        uintmax_t depth = 0;
+        size_t size = 0;
+        std::filesystem::path path;
+        Segment * parent = nullptr;
+
+        std::list<Segment *> sub_segments;
+        std::list<Segment> files;
 
     public:
-        explicit Segment(std::filesystem::path path, const uintmax_t && depth);
+        explicit Segment(std::filesystem::path path, size_t size, uintmax_t depth);
         void update(void);
-        inline std::list<std::wstring> & get_sub_segment(void) noexcept {return this->sub_segments;}
-        inline std::list<std::wstring> & get_files(void) noexcept {return this->files;}
+        std::filesystem::path construct_path(void);
+
+        inline std::list<Segment *> & get_sub_segments(void) noexcept {return this->sub_segments;}
+        inline std::list<Segment> & get_files(void) noexcept {return this->files;}
         inline uintmax_t get_depth(void) const noexcept {return this->depth;}
+        inline const std::filesystem::path & get_path(void) noexcept {return this->path;}
+        inline Segment * get_parent(void) const noexcept {return this->parent;}
+        inline void set_parent_segment(Segment * __parent) noexcept {this->parent = __parent;}
     };
 }
 
