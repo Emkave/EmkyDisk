@@ -25,7 +25,7 @@ void Segment::update() {
 }
 
 
-std::filesystem::path Segment::construct_path(void) {
+std::filesystem::path Segment::construct_path(void) const {
     std::wstring str = this->path.wstring();
 
     for (const Segment * ptr = this->parent; ptr; ptr = ptr->parent) {
@@ -37,5 +37,5 @@ std::filesystem::path Segment::construct_path(void) {
         return "";
     }
 
-    return std::filesystem::path(str);
+    return str;
 }

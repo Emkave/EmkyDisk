@@ -23,13 +23,14 @@ namespace EDisk {
     public:
         explicit Segment(std::filesystem::path path, size_t size, uintmax_t depth);
         void update(void);
-        std::filesystem::path construct_path(void);
+        std::filesystem::path construct_path(void) const;
 
         inline std::list<Segment *> & get_sub_segments(void) noexcept {return this->sub_segments;}
         inline std::list<Segment> & get_files(void) noexcept {return this->files;}
         inline uintmax_t get_depth(void) const noexcept {return this->depth;}
         inline const std::filesystem::path & get_path(void) noexcept {return this->path;}
         inline Segment * get_parent(void) const noexcept {return this->parent;}
+
         inline void set_parent_segment(Segment * __parent) noexcept {this->parent = __parent;}
     };
 }
