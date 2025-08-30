@@ -14,7 +14,7 @@ Segment::Segment(std::filesystem::path path, size_t size, uintmax_t depth) : dep
 
 
 void Segment::update() {
-    const Vector2i mouse_pos = Mouse::getPosition(*window);
+    const Vector2i mouse_pos = Mouse::getPosition(*registers::window);
     const Vector2f mouse_pos_f = {static_cast<float>(mouse_pos.x), static_cast<float>(mouse_pos.y)};
 
     // if (this->getGlobalBounds().contains(mouse_pos_f)) {

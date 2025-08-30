@@ -28,22 +28,20 @@ VertexArray createSector(const float radius, const float startAngle, const float
 }
 
 
+
+
+
+
 int main() {
     sf::ContextSettings settings;
     settings.antiAliasingLevel = 4;
 
     class window window;
-    window.init();
+    window.assemble();
 
     while (window.win().isOpen()) {
         while (const std::optional ev = window.win().pollEvent()) {
-            if (ev->is<sf::Event::Closed>()) {
-                window.win().close();
-            }
-            if (const auto * resized = ev->getIf<sf::Event::Resized>()) {
-                sf::FloatRect visibleArea({0.f, 0.f}, sf::Vector2f(resized->size));
-                window.win().setView(sf::View(visibleArea));
-            }
+             window.handle_events(*ev);
         }
 
         window.win().clear(sf::Color(24, 24, 32));

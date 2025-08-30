@@ -1,35 +1,32 @@
 #ifndef WINDOW_H
 #define WINDOW_H
-#include <SFML/Graphics.hpp>
+#include <button.h>
 #include <windows.h>
 
 using namespace sf;
 
 class window {
 private:
-    RectangleShape btn_min;
-    RectangleShape btn_max;
-    RectangleShape btn_close;
+    RectangleButton btn_min;
+    RectangleButton btn_max;
+    RectangleButton btn_close;
+    RectangleShape frame;
+
+    ConvexShape border_shape;
 
     RenderWindow _win;
     HWND hwnd = nullptr;
 
-    ConvexShape border_shape;
-    ConvexShape background_shape;
-
-    float caption_h = 36.f;
-    float btn_w = 46.f;
-    float corner_radius = 20.f;
-    float border_thickness = 2.f;
-
-    Color border_color = Color(64, 64, 64);
-    Color bg_color = Color(24, 24, 32);
+    const Color border_color = Color(64, 64, 64);
+    const Color bg_color = Color(24, 24, 32);
 
     static ConvexShape make_round_rect(const Vector2f, float, const int);
 
 public:
-    void init();
+    window();
+    void assemble();
     void render();
+    void handle_events(const Event &);
 
     inline RenderWindow & win(void) noexcept {return this->_win;}
 };
