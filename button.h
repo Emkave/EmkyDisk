@@ -30,6 +30,8 @@ template <typename ShapeT> class button {
     static inline Vector2f mouse_world(void);
     inline bool hit(const Vector2f &) const;
     void apply_colors();
+    Vector2f shape_world_center() const;
+    void center_text_on_shape(float px = 0.f, float py = 0.f);
 
 public:
     template <typename ... Args> explicit button(Args && ... args) : shape(std::forward<Args>(args)...) {}
@@ -43,10 +45,14 @@ public:
     inline void set_text_hover_color(const Color && color) noexcept {this->text_hover_color = color;}
     inline void set_text_press_color(const Color && color) noexcept {this->text_press_color = color;}
 
+    void set_position(const Vector2f & pos);
     void set_action(std::function<void(void)> a) {this->action = a;}
+    void set_label(const String &);
+    void set_text_size(unsigned);
     void handle_event(const Event &);
     void execute() const {this->action();}
     void render();
+    void draw();
 };
 
 
@@ -74,10 +80,42 @@ template<typename ShapeT> void button<ShapeT>::apply_colors() {
 }
 
 
-template<typename ShapeT> void button<ShapeT>::handle_event(const Event & event) {
-    const Vector2f mp = this->mouse_world();
+template<typename ShapeT> Vector2f button<ShapeT>::shape_world_center() const {
+    const FloatRect lb = this->shape.getLocalBounds();
+    Vector2f local_center = lb.getCenter();
+    return this->shape.getTransform().transformPoint(local_center);
+}
 
-    if (this->hit(mp)) {
+
+template<typename ShapeT> void button<ShapeT>::center_text_on_shape(const float px, const float py) {
+    const FloatRect tb = this->text.getLocalBounds();
+    this->text.setOrigin(tb.getCenter());
+    const Vector2f c = shape_world_center();
+    text.setPosition(c + Vector2f(px, py));
+}
+
+
+template<typename ShapeT> void button<ShapeT>::set_position(const Vector2f & pos) {
+    this->shape.setPosition(pos);
+    this->center_text_on_shape();
+}
+
+
+template<typename ShapeT> void button<ShapeT>::set_label(const String & s) {
+    this->text.setString(s);
+    this->center_text_on_shape();
+    this->apply_colors();
+}
+
+
+template<typename ShapeT> void button<ShapeT>::set_text_size(const unsigned size) {
+    this->text.setCharacterSize(size);
+    this->center_text_on_shape();
+}
+
+
+template<typename ShapeT> void button<ShapeT>::handle_event(const Event & event) {
+    if (const Vector2f mp = this->mouse_world(); this->hit(mp)) {
         this->hovered = true;
         this->apply_colors();
 
@@ -114,6 +152,12 @@ template<typename ShapeT> void button<ShapeT>::handle_event(const Event & event)
 
 template<typename ShapeT> void button<ShapeT>::render() {
     this->apply_colors();
+}
+
+
+template<typename ShapeT> void button<ShapeT>::draw() {
+    registers::window->draw(this->shape);
+    registers::window->draw(this->text);
 }
 
 
