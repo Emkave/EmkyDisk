@@ -1,7 +1,10 @@
 #ifndef WINDOW_H
 #define WINDOW_H
-#include <button.h>
+#include "button.h"
+#include "other.h"
+#include "searchbar.h"
 #include <windows.h>
+
 
 using namespace sf;
 
@@ -10,17 +13,21 @@ private:
     RectangleButton btn_min;
     RectangleButton btn_max;
     RectangleButton btn_close;
+    ConvexButton btn_browse;
+    ConvexButton btn_scan;
     RectangleShape frame;
-
     ConvexShape border_shape;
+
+    searchbar searchbar;
+
+    Font font = Font("../arial.ttf");
+    Text title = Text(font, "EmkyDisk");
 
     RenderWindow _win;
     HWND hwnd = nullptr;
 
     const Color border_color = Color(64, 64, 64);
     const Color bg_color = Color(24, 24, 32);
-
-    static ConvexShape make_round_rect(const Vector2f, float, const int);
 
 public:
     window();

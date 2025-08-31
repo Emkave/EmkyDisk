@@ -3,7 +3,7 @@
 #if WIN32
 #include <windows.h>
 #endif
-#include "SFML/Graphics.hpp"
+#include <SFML/Graphics.hpp>
 #include "settings.h"
 #include "segment.h"
 #include <filesystem>

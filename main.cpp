@@ -28,10 +28,6 @@ VertexArray createSector(const float radius, const float startAngle, const float
 }
 
 
-
-
-
-
 int main() {
     sf::ContextSettings settings;
     settings.antiAliasingLevel = 4;

@@ -12,6 +12,10 @@ add_executable(EmkyDisk main.cpp
         window.cpp
         window.h
         button.h
+        searchbar.h
+        searchbar.cpp
+        other.h
+        other.cpp
 )
 
 

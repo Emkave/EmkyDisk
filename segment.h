@@ -1,6 +1,6 @@
 #ifndef SEGMENT_H
 #define SEGMENT_H
-#include "SFML/Graphics.hpp"
+#include <SFML/Graphics.hpp>
 #include "settings.h"
 #include <list>
 
