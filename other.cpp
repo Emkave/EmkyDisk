@@ -1,6 +1,7 @@
-#include <other.h>
+#include "other.h"
+#include "settings.h"
 
-ConvexShape others::make_round_rect(const Vector2f size, float r, const int segs) {
+ConvexShape functions::make_round_rect(const Vector2f size, float r, const int segs) {
     ConvexShape c;
 
     r = std::max(0.f, std::min(r, std::min(size.x, size.y) * 0.5f));
@@ -29,4 +30,16 @@ ConvexShape others::make_round_rect(const Vector2f size, float r, const int segs
     put_arc(3, bl,  90.f);
 
     return c;
+}
+
+
+void functions::reset_view_to_window() {
+    if (!registers::window) {
+        return;
+    }
+    const Vector2u s = registers::window->getSize();
+    const FloatRect area({0.f, 0.f}, Vector2f(static_cast<float>(s.x), static_cast<float>(s.y)));
+    registers::window->setView(View(area));
+
+
 }

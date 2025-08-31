@@ -29,15 +29,18 @@ VertexArray createSector(const float radius, const float startAngle, const float
 
 
 int main() {
-    sf::ContextSettings settings;
-    settings.antiAliasingLevel = 4;
-
+    registers::clock.start();
     class window window;
     window.assemble();
 
     while (window.win().isOpen()) {
         while (const std::optional ev = window.win().pollEvent()) {
              window.handle_events(*ev);
+
+            if (const auto* r = ev->getIf<sf::Event::Resized>()) {
+                functions::reset_view_to_window();
+                window.assemble();
+            }
         }
 
         window.win().clear(sf::Color(24, 24, 32));
@@ -46,8 +49,6 @@ int main() {
     }
 
     window.win().close();
-
-
 
     return 0;
 }

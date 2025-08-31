@@ -4,8 +4,10 @@
 
 using namespace sf;
 
-namespace others {
+namespace functions {
     ConvexShape make_round_rect(const Vector2f, float, const int);
+
+    void reset_view_to_window();
 }
 
 

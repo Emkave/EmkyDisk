@@ -29,11 +29,16 @@ private:
     const Color border_color = Color(64, 64, 64);
     const Color bg_color = Color(24, 24, 32);
 
+    template <typename Func> static auto make_function(Func ptr) {
+        return std::function<std::remove_pointer_t<Func>>(ptr);
+    }
+
 public:
     window();
     void assemble();
     void render();
     void handle_events(const Event &);
+    void resize_window_after_scan(void) const;
 
     inline RenderWindow & win(void) noexcept {return this->_win;}
 };

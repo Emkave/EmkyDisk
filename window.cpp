@@ -20,6 +20,21 @@ window::window() {
 }
 
 
+void window::resize_window_after_scan() const {
+    RECT rect;
+    GetWindowRect(this->hwnd, &rect);
+
+    const int width = rect.right - rect.left;
+    constexpr int height = 600;
+
+    SetWindowPos(this->hwnd, nullptr, rect.left, rect.top, width, height, SWP_NOZORDER | SWP_NOACTIVATE);
+
+    HRGN region = CreateRoundRectRgn(0, 0, width+1, height+1, 20, 20);
+    SetWindowRgn(this->hwnd, region, TRUE);
+    DeleteObject(region);
+}
+
+
 void window::handle_events(const Event & event) {
     this->btn_close.handle_event(event);
     this->btn_max.handle_event(event);
@@ -54,14 +69,14 @@ void window::assemble() {
     GetClientRect(this->hwnd, &rect);
     const int w = rect.right - rect.left;
     const int h = rect.bottom - rect.top;
-    const HRGN region = CreateRoundRectRgn(0, 0, w+1, h+1, 20.f * 1.f-3, 20.f*1.f-3);
+    HRGN region = CreateRoundRectRgn(0, 0, w+1, h+1, 20.f * 1.f-3, 20.f*1.f-3);
     SetWindowRgn(this->hwnd, region, TRUE);
     DeleteObject(region);
 
     constexpr float btn_w = 46.f;
     constexpr float btn_h = 26.f;
 
-    this->border_shape = others::make_round_rect(Vector2f(w, h), 20.f*1.f-11, 60);
+    this->border_shape = functions::make_round_rect(Vector2f(w, h), 20.f*1.f-11, 60);
     this->border_shape.setPosition({0.f, 0.f});
     this->border_shape.setOutlineColor(this->border_color);
     this->border_shape.setOutlineThickness(-1);
@@ -86,7 +101,7 @@ void window::assemble() {
     this->btn_close.set_text_base_color(std::move(Color(70, 70, 86)));
     this->btn_close.set_text_hover_color(std::move(Color::White));
 
-    this->btn_browse.get_shape() = others::make_round_rect({70, 23}, 20.f*0.3f, 30);
+    this->btn_browse.get_shape() = functions::make_round_rect({70, 23}, 20.f*0.3f, 30);
     this->btn_browse.get_shape().setPosition({730, 40});
     this->btn_browse.get_shape().setFillColor(Color(45, 45, 56));
     this->btn_browse.set_shape_press_color(Color(50*0.6f, 50*0.6f, 66*0.6f));
@@ -94,23 +109,24 @@ void window::assemble() {
     this->btn_browse.set_text_size(20);
     this->btn_browse.set_text_base_color(std::move(Color::White));
 
-    this->btn_scan.get_shape() = others::make_round_rect({70, 23}, 20.f*0.3f, 30);
+    this->btn_scan.get_shape() = functions::make_round_rect({70, 23}, 20.f*0.3f, 30);
     this->btn_scan.get_shape().setPosition({820, 40});
     this->btn_scan.get_shape().setFillColor(Color(45, 45, 56));
     this->btn_scan.set_shape_press_color(Color(50*0.6f, 50*0.6f, 66*0.6f));
     this->btn_scan.set_label("scan");
     this->btn_scan.set_text_size(12);
     this->btn_scan.set_text_base_color(std::move(Color::White));
+    this->btn_scan.set_action(std::bind_front(&window::resize_window_after_scan, this));
 
     this->frame.setPosition({0, 0});
-    this->frame.setFillColor(Color(50*0.7, 50*0.7, 66*0.7));
+    this->frame.setFillColor(Color(50.f*0.7, 50.f*0.7, 66*0.7));
     this->frame.setSize({WIN_WIDTH-btn_w*2, btn_h});
 
     this->title.setCharacterSize(12);
     this->title.setFillColor(Color(180, 180, 180));
-    this->title.setPosition({WIN_WIDTH/2-6, 6});
+    this->title.setPosition({static_cast<float>(WIN_WIDTH)/2-6, 6});
 
-    this->searchbar.get_shape() = others::make_round_rect({700, 23}, 20.f*0.3f, 30);
+    this->searchbar.get_shape() = functions::make_round_rect({700, 23}, 20.f*0.3f, 30);
     this->searchbar.get_shape().setPosition({10, 40});
     this->searchbar.get_shape().setFillColor(Color(45, 45, 56));
 }
