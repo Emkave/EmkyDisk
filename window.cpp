@@ -5,7 +5,7 @@
 
 window::window() {
     ContextSettings settings;
-    settings.antiAliasingLevel = 10;
+    settings.antiAliasingLevel = 5;
     this->_win.create(VideoMode({WIN_WIDTH, WIN_HEIGHT}), "EmkyDisk", Style::None, State::Windowed, settings);
     this->_win.setFramerateLimit(120);
     registers::window = &this->_win;
@@ -47,16 +47,16 @@ void window::handle_events(const Event & event) {
             const Vector2f mp = this->_win.mapPixelToCoords(Mouse::getPosition(this->_win));
 
             auto over_any = [&](const Vector2f p) -> bool {
-                return btn_close.get_shape().getGlobalBounds().contains(p) ||
-                       btn_max.get_shape().getGlobalBounds().contains(p) ||
-                       btn_min.get_shape().getGlobalBounds().contains(p) ||
-                       btn_browse.get_shape().getGlobalBounds().contains(p) ||
-                       btn_scan.get_shape().getGlobalBounds().contains(p);
+                return this->btn_close.get_shape().getGlobalBounds().contains(p) ||
+                       this->btn_max.get_shape().getGlobalBounds().contains(p) ||
+                       this->btn_min.get_shape().getGlobalBounds().contains(p) ||
+                       this->btn_browse.get_shape().getGlobalBounds().contains(p) ||
+                       this->btn_scan.get_shape().getGlobalBounds().contains(p);
             };
 
             if (!over_any(mp) && mp.y >= 0.f && mp.y < 26.f) {
                 ReleaseCapture();
-                SendMessage(hwnd, WM_NCLBUTTONDOWN, HTCAPTION, 0);
+                SendMessage(this->hwnd, WM_NCLBUTTONDOWN, HTCAPTION, 0);
             }
         }
     }
@@ -96,7 +96,7 @@ void window::assemble() {
     this->btn_close.get_shape().setPosition({w - btn_w, 0});
     this->btn_close.set_shape_hover_color(Color(200, 46, 46));
     this->btn_close.set_action([&]{this->_win.close();});
-    this->btn_close.set_label(L"×");
+    this->btn_close.set_label(L"˟");
     this->btn_close.set_text_size(30);
     this->btn_close.set_text_base_color(std::move(Color(70, 70, 86)));
     this->btn_close.set_text_hover_color(std::move(Color::White));
