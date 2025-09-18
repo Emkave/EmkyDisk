@@ -1,5 +1,7 @@
 #include "other.h"
+#include "vld.h"
 #include "settings.h"
+
 
 ConvexShape functions::make_round_rect(const Vector2f size, float r, const int segs) {
     ConvexShape c;
@@ -40,6 +42,50 @@ void functions::reset_view_to_window() {
     const Vector2u s = registers::window->getSize();
     const FloatRect area({0.f, 0.f}, Vector2f(static_cast<float>(s.x), static_cast<float>(s.y)));
     registers::window->setView(View(area));
+}
 
 
+std::optional<std::wstring> functions::browse_folder(const HWND parent) {
+    VLDDisable();
+    IFileDialog * dlg = nullptr;
+    HRESULT hr = CoCreateInstance(CLSID_FileOpenDialog, nullptr, CLSCTX_INPROC_SERVER, IID_PPV_ARGS(&dlg));
+
+    if (FAILED(hr)) {
+        return std::nullopt;
+    }
+
+    DWORD opts = 0;
+    dlg->GetOptions(&opts);
+    dlg->SetOptions(opts | FOS_PICKFOLDERS | FOS_FORCEFILESYSTEM | FOS_PATHMUSTEXIST);
+    dlg->SetTitle(L"Select directory");
+
+    hr = dlg->Show(parent);
+    if (hr == HRESULT_FROM_WIN32(ERROR_CANCELLED) || FAILED(hr)) {
+        dlg->Release();
+        return std::nullopt;
+    }
+
+    IShellItem * item = nullptr;
+
+    hr = dlg->GetResult(&item);
+    if (FAILED(hr)) {
+        dlg->Release();
+        return std::nullopt;
+    }
+
+    PWSTR psz = nullptr;
+
+    hr = item->GetDisplayName(SIGDN_FILESYSPATH, &psz);
+    std::optional<std::wstring> out;
+    if (SUCCEEDED(hr) && psz) {
+        out.emplace(psz);
+        CoTaskMemFree(psz);
+    }
+
+    item->Release();
+    dlg->Release();
+    CoFreeUnusedLibrariesEx(0, 0);
+    VLDEnable();
+
+    return out;
 }

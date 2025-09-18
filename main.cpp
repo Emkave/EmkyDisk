@@ -5,10 +5,9 @@
 #include "vld.h"
 #include "settings.h"
 #include "window.h"
+#include "other.h"
 
 using namespace sf;
-
-const float PI = 3.14159265f;
 
 
 VertexArray createSector(const float radius, const float startAngle, const float endAngle, const int segments = 50) {
@@ -30,18 +29,20 @@ VertexArray createSector(const float radius, const float startAngle, const float
 
 int main() {
     registers::clock.start();
-    class window window;
+    window window;
     window.assemble();
 
     while (window.win().isOpen()) {
         while (const std::optional ev = window.win().pollEvent()) {
              window.handle_events(*ev);
 
-            if (const auto* r = ev->getIf<sf::Event::Resized>()) {
+            if (ev->getIf<sf::Event::Resized>()) {
                 functions::reset_view_to_window();
                 window.assemble();
             }
         }
+
+        registers::clock.reset();
 
         window.win().clear(sf::Color(24, 24, 32));
         window.render();

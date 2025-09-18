@@ -12,9 +12,9 @@ using namespace sf;
 template <typename ShapeT> class button {
     static_assert(std::is_base_of_v<Shape, ShapeT>, "ShapeT must derive from Shape.");
     ShapeT shape;
-    Color shape_base_color = Color(50*0.7f, 50*0.7f, 66.f*0.7f);
-    Color shape_hover_color = Color(50*0.9f, 50*0.9f, 66.f*0.9f);
-    Color shape_press_color = Color(50*0.9f, 50*0.9f, 66.f*0.9f);
+    Color shape_base_color = Color(35, 35, 46);
+    Color shape_hover_color = Color(45, 45, 59);
+    Color shape_press_color = Color(45, 45, 59);
 
     Color text_base_color = Color(180, 180, 180);
     Color text_hover_color = Color(180, 180, 180);
@@ -81,8 +81,7 @@ template<typename ShapeT> void button<ShapeT>::apply_colors() {
 
 
 template<typename ShapeT> Vector2f button<ShapeT>::shape_world_center() const {
-    const FloatRect lb = this->shape.getLocalBounds();
-    Vector2f local_center = lb.getCenter();
+    Vector2f local_center = this->shape.getLocalBounds().getCenter();
     return this->shape.getTransform().transformPoint(local_center);
 }
 
@@ -91,7 +90,7 @@ template<typename ShapeT> void button<ShapeT>::center_text_on_shape(const float 
     const FloatRect tb = this->text.getLocalBounds();
     this->text.setOrigin(tb.getCenter());
     const Vector2f c = shape_world_center();
-    text.setPosition(c + Vector2f(px, py));
+    this->text.setPosition(c + Vector2f(px, py));
 }
 
 

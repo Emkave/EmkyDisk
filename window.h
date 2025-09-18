@@ -1,9 +1,7 @@
 #ifndef WINDOW_H
 #define WINDOW_H
 #include "button.h"
-#include "other.h"
 #include "searchbar.h"
-#include <windows.h>
 
 
 using namespace sf;
@@ -20,7 +18,7 @@ private:
 
     searchbar searchbar;
 
-    Font font = Font("../arial.ttf");
+    Font font = Font(registers::font);
     Text title = Text(font, "EmkyDisk");
 
     RenderWindow _win;
