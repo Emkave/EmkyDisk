@@ -38,7 +38,7 @@ int main() {
 
             if (ev->getIf<sf::Event::Resized>()) {
                 functions::reset_view_to_window();
-                window.assemble();
+                window.reassemble();
             }
         }
 

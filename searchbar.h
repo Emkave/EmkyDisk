@@ -11,6 +11,16 @@ private:
 
     Text text = Text(registers::font, registers::init_scan_path);
 
+    unsigned short begin_index = 0;
+    unsigned short end_index = 0;
+    unsigned short caret_index = 0;
+    bool activated = false;
+
+    char caret_symbol = '|';
+    Text caret_text = Text(registers::font);
+
+    const unsigned short field_size = 41;
+
 public:
     searchbar();
 
@@ -18,12 +28,13 @@ public:
     inline Text & get_text(void) noexcept {return this->text;}
 
 
-
     void draw() const;
     void update();
     void handle_event(const Event &);
+    void set_position(const Vector2f);
 
-    void set_position(const Vector2f pos);
+    static Vector2f mouse_world();
+    bool hit(const Vector2f &) const;
 
 };
 

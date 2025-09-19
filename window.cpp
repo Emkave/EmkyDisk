@@ -61,8 +61,25 @@ void window::handle_events(const Event & event) {
             }
         }
     }
-
 }
+
+
+void window::reassemble() {
+    RECT rect;
+    GetClientRect(this->hwnd, &rect);
+    const int w = rect.right - rect.left;
+    const int h = rect.bottom - rect.top;
+    const HRGN region = CreateRoundRectRgn(0, 0, w+1, h+1, 20.f * 1.f-3, 20.f*1.f-3);
+    SetWindowRgn(this->hwnd, region, TRUE);
+    DeleteObject(region);
+
+    this->border_shape = functions::make_round_rect(Vector2f(static_cast<float>(w), static_cast<float>(h)), 9, 60);
+    this->border_shape.setPosition({0.f, 0.f});
+    this->border_shape.setOutlineColor(this->border_color);
+    this->border_shape.setOutlineThickness(-1);
+    this->border_shape.setFillColor(Color::Transparent);
+}
+
 
 
 void window::assemble() {
@@ -70,7 +87,7 @@ void window::assemble() {
     GetClientRect(this->hwnd, &rect);
     const int w = rect.right - rect.left;
     const int h = rect.bottom - rect.top;
-    HRGN region = CreateRoundRectRgn(0, 0, w+1, h+1, 20.f * 1.f-3, 20.f*1.f-3);
+    const HRGN region = CreateRoundRectRgn(0, 0, w+1, h+1, 20.f * 1.f-3, 20.f*1.f-3);
     SetWindowRgn(this->hwnd, region, TRUE);
     DeleteObject(region);
 
@@ -111,8 +128,7 @@ void window::assemble() {
     this->btn_browse.set_text_base_color(Color(255, 255, 255));
     this->btn_browse.set_action([this] {
         if (const std::optional<std::wstring> path = functions::browse_folder(this->hwnd)) {
-            registers::init_scan_path = std::move(*path);
-            this->searchbar.get_text().setString(registers::init_scan_path);
+            registers::init_scan_path = *path;
         }
     });
 

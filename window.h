@@ -34,6 +34,7 @@ private:
 public:
     window();
     void assemble();
+    void reassemble();
     void render();
     void handle_events(const Event &);
     void resize_window_after_scan(void) const;
