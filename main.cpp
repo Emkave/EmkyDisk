@@ -44,7 +44,7 @@ int main() {
 
         registers::clock.reset();
 
-        window.win().clear(sf::Color(24, 24, 32));
+        window.win().clear(Color(24, 24, 32));
         window.render();
         window.win().display();
     }

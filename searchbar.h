@@ -11,16 +11,18 @@ private:
 
     Text text = Text(registers::font, registers::init_scan_path);
 
-    unsigned short begin_index = 0;
-    unsigned short end_index = 0;
-    unsigned short caret_index = 0;
+    short begin_index = 0;
+    short end_index = 0;
+    short caret_index = 0;
     bool activated = false;
 
     char caret_symbol = '|';
     Text caret_text = Text(registers::font);
 
-    const unsigned short field_size = 41;
+    const short field_size = 91;
 
+    static Vector2f mouse_world();
+    bool hit(const Vector2f &) const;
 public:
     searchbar();
 
@@ -30,12 +32,9 @@ public:
 
     void draw() const;
     void update();
+    void reindex();
     void handle_event(const Event &);
-    void set_position(const Vector2f);
-
-    static Vector2f mouse_world();
-    bool hit(const Vector2f &) const;
-
+    void set_position(Vector2f);
 };
 
 #endif //SEARCHBAR_H

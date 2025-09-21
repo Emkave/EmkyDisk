@@ -41,7 +41,7 @@ void window::handle_events(const Event & event) {
     this->btn_min.handle_event(event);
     this->btn_browse.handle_event(event);
     this->btn_scan.handle_event(event);
-    this->searchbar.handle_event(event);
+    //this->searchbar.handle_event(event);
 
     if (const auto * mbe = event.getIf<Event::MouseButtonPressed>()) {
         if (mbe->button == Mouse::Button::Left) {
@@ -79,7 +79,6 @@ void window::reassemble() {
     this->border_shape.setOutlineThickness(-1);
     this->border_shape.setFillColor(Color::Transparent);
 }
-
 
 
 void window::assemble() {
@@ -125,10 +124,13 @@ void window::assemble() {
     this->btn_browse.set_shape_press_color(Color(30, 30, 40));
     this->btn_browse.set_label("...");
     this->btn_browse.set_text_size(20);
-    this->btn_browse.set_text_base_color(Color(255, 255, 255));
+    this->btn_browse.set_text_base_color(Color(100, 100, 100));
+    this->btn_browse.set_text_press_color(Color(250, 250, 250));
     this->btn_browse.set_action([this] {
         if (const std::optional<std::wstring> path = functions::browse_folder(this->hwnd)) {
             registers::init_scan_path = *path;
+            this->searchbar.get_text().setString(registers::init_scan_path);
+            this->searchbar.reindex();
         }
     });
 
@@ -136,9 +138,10 @@ void window::assemble() {
     this->btn_scan.get_shape().setPosition({820, 40});
     this->btn_scan.get_shape().setFillColor(Color(45, 45, 56));
     this->btn_scan.set_shape_press_color(Color(30, 30, 40));
-    this->btn_scan.set_label("scan");
-    this->btn_scan.set_text_size(12);
-    this->btn_scan.set_text_base_color(Color(255, 255, 255));
+    this->btn_scan.set_label("Scan");
+    this->btn_scan.set_text_size(13);
+    this->btn_scan.set_text_base_color(Color(100, 100, 100));
+    this->btn_scan.set_text_press_color(Color(250, 250, 250));
     this->btn_scan.set_action(std::bind_front(&window::resize_window_after_scan, this));
 
     this->frame.setPosition({0, 0});
@@ -149,7 +152,11 @@ void window::assemble() {
     this->title.setFillColor(Color(180, 180, 180));
     this->title.setPosition({static_cast<float>(WIN_WIDTH)/2-6, 6});
 
+    this->searchbar.get_shape() = functions::make_round_rect({700, 23}, 6.f, 24);
     this->searchbar.get_shape().setFillColor(Color(45, 45, 56));
+    this->searchbar.get_text().setFillColor(Color(190, 190, 190));
+    this->searchbar.get_text().setCharacterSize(15);
+    this->searchbar.get_text().setLetterSpacing(1.4992826398852224);
     this->searchbar.set_position({10, 40});
 }
 
