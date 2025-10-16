@@ -128,8 +128,8 @@ void window::assemble() {
     this->btn_browse.set_text_press_color(Color(250, 250, 250));
     this->btn_browse.set_action([this] {
         if (const std::optional<std::wstring> path = functions::browse_folder(this->hwnd)) {
-            registers::init_scan_path = *path;
-            this->searchbar.get_text().setString(registers::init_scan_path);
+            registers::scan_path = *path;
+            this->searchbar.get_text().setString(registers::scan_path);
             this->searchbar.reindex();
         }
     });
@@ -142,7 +142,9 @@ void window::assemble() {
     this->btn_scan.set_text_size(13);
     this->btn_scan.set_text_base_color(Color(100, 100, 100));
     this->btn_scan.set_text_press_color(Color(250, 250, 250));
-    this->btn_scan.set_action(std::bind_front(&window::resize_window_after_scan, this));
+    this->btn_scan.set_action([] {
+        EDisk::Disk::scan();
+    });
 
     this->frame.setPosition({0, 0});
     this->frame.setFillColor(Color(35, 35, 46));

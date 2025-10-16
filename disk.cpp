@@ -1,18 +1,25 @@
 #include "disk.h"
 
+namespace EDisk {
+    uintmax_t Disk::capacity = 0;
+    uintmax_t Disk::available = 0;
+    uintmax_t Disk::used = 0;
+    float Disk::used_percent = 0;
+    std::list<Segment> Disk::segments = {};
+}
+
 
 bool EDisk::Disk::set_path(const std::filesystem::path & path) {
     if (!std::filesystem::is_directory(path)) {
         std::wcerr << "EDisk::Disk::set_path() -> Invalid path given for disk root.\n";
         throw std::runtime_error("EDisk::Disk::set_path() -> Invalid path given for disk root.");
     }
-    this->root = path;
 
     const std::filesystem::space_info info = std::filesystem::space(path);
-    this->capacity = info.capacity;
-    this->available = info.available;
-    this->used = info.capacity - info.available;
-    this->used_percent = static_cast<float>(this->used) / static_cast<float>(this->capacity);
+    Disk::capacity = info.capacity;
+    Disk::available = info.available;
+    Disk::used = info.capacity - info.available;
+    Disk::used_percent = static_cast<float>(Disk::used) / static_cast<float>(Disk::capacity);
 
     return true;
 }
@@ -53,16 +60,41 @@ size_t EDisk::Disk::get_size(const std::filesystem::path & path) {
 }
 
 
+size_t EDisk::Disk::set_sizes(Segment * segment, const size_t depth) {
+    if (!segment) {
+        return 0;
+    }
+
+    segment->set_depth(depth);
+
+    size_t size = 0;
+
+    for (Segment *& sub_segment : segment->get_sub_segments()) {
+        size += EDisk::Disk::set_sizes(sub_segment, depth+1);
+    }
+
+    for (Segment & file : segment->get_files()) {
+        size += file.get_size();
+    }
+
+    segment->set_size(size);
+
+    return size;
+}
+
+
+
 bool EDisk::Disk::scan() {
-    if (!std::filesystem::exists(this->root)) {
+    if (!std::filesystem::exists(registers::scan_path)) {
         return false;
     }
 
+
     std::queue<Segment> queue;
-    queue.emplace(this->root, EDisk::Disk::get_size(this->root), EDisk::Disk::get_depth(this->root, this->root));
+    queue.emplace(registers::scan_path, 0, 0);
 
     while (!queue.empty()) {
-        Segment & last_segment = this->segments.emplace_back(std::move(queue.front()));
+        Segment & last_segment = Disk::segments.emplace_back(std::move(queue.front()));
         queue.pop();
 
         std::filesystem::path iterator_dest_path = last_segment.get_path();
@@ -78,36 +110,19 @@ bool EDisk::Disk::scan() {
 
         for (const std::filesystem::directory_entry & entry : std::filesystem::directory_iterator(iterator_dest_path, std::filesystem::directory_options::skip_permission_denied)) {
             if (entry.is_directory()) {
-                queue.emplace(entry.path().filename(), EDisk::Disk::get_size(entry.path()), EDisk::Disk::get_depth(this->root, entry.path()));
+                queue.emplace(entry.path().filename(), 0, 0);
                 queue.back().set_parent_segment(&last_segment);
             } else {
-                last_segment.get_files().emplace_back(entry.path().filename(), EDisk::Disk::get_file_size(entry.path()), EDisk::Disk::get_depth(this->root, entry.path()));
+                last_segment.get_files().emplace_back(entry.path().filename(), EDisk::Disk::get_file_size(entry.path()), 0);
                 last_segment.get_files().back().set_parent_segment(&last_segment);
             }
         }
     }
 
-    for (Segment & segment : this->segments) {
-        std::filesystem::path path_check = segment.construct_path();
+    EDisk::Disk::set_sizes(&(*EDisk::Disk::get_segments().begin()));
 
-        if (!std::filesystem::exists(path_check)) {
-            std::wcerr << "EDisk::Disk::scan() -> the path to " << path_check.wstring() << " is corrupted.\n";
-            //throw std::runtime_error("EDisk::Disk::scan() -> the path to " + path_check.wstring() + " is corrupted.");
-        }
-
-        for (Segment & file : segment.get_files()) {
-            path_check = file.construct_path();
-
-            if (!std::filesystem::exists(path_check)) {
-                std::wcerr << "EDisk::Disk::scan() -> the path to " << path_check.wstring() << " is corrupted.\n";
-                //throw std::runtime_error("EDisk::Disk::scan() -> the path to " + path_check.wstring() + " is corrupted.");
-            }
-        }
-    }
-
-
-    if (!std::ranges::is_sorted(this->segments, segment_comparator())) {
-        this->segments.sort(segment_comparator());
+    if (!std::ranges::is_sorted(Disk::segments, segment_comparator())) {
+        Disk::segments.sort(segment_comparator());
     }
 
     return true;

@@ -22,32 +22,33 @@ namespace EDisk {
 
     class Disk {
     private:
-        uintmax_t capacity = 0;
-        uintmax_t available = 0;
-        uintmax_t used = 0;
-        float used_percent = 0;
-
-        std::filesystem::path root;
+        static uintmax_t capacity;
+        static uintmax_t available;
+        static uintmax_t used;
+        static float used_percent;
 
         //std::unordered_map<std::wstring, Segment> disk;
-        std::list<Segment> segments;
+        static std::list<Segment> segments;
 
         static size_t get_file_size(const std::filesystem::path & path);
+        static size_t set_sizes(Segment * segment, size_t depth = 1);
 
     public:
-        bool set_path(const std::filesystem::path & path);
-        bool scan();
+        static bool set_path(const std::filesystem::path & path);
+        static bool scan();
 
         static uintmax_t get_depth(const std::filesystem::path & root, const std::filesystem::path & target);
         static size_t get_size(const std::filesystem::path & path);
 
-        inline uintmax_t get_capacity(void) const noexcept {return this->capacity;}
-        inline uintmax_t get_available(void) const noexcept {return this->available;}
-        inline uintmax_t get_used(void) const noexcept {return this->used;}
-        inline float get_usage_percent(void) const noexcept {return this->used_percent;}
+        static inline uintmax_t get_capacity(void) noexcept {return Disk::capacity;}
+        static inline uintmax_t get_available(void) noexcept {return Disk::available;}
+        static inline uintmax_t get_used(void) noexcept {return Disk::used;}
+        static inline float get_usage_percent(void) noexcept {return Disk::used_percent;}
         //inline std::unordered_map<std::wstring, Segment> & get_disk(void) noexcept {return this->disk;}
-        inline std::list<Segment> & get_segments(void) noexcept {return this->segments;}
+        static inline std::list<Segment> & get_segments(void) noexcept {return Disk::segments;}
     };
 }
+
+
 
 #endif //DISK_H

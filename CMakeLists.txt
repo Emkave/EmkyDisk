@@ -16,6 +16,7 @@ add_executable(EmkyDisk main.cpp
         searchbar.cpp
         other.h
         other.cpp
+        thread_pool.h
 )
 
 

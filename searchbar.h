@@ -9,7 +9,7 @@ class searchbar {
 private:
     ConvexShape shape;
 
-    Text text = Text(registers::font, registers::init_scan_path);
+    Text text = Text(registers::font, registers::scan_path);
 
     short begin_index = 0;
     short end_index = 0;
@@ -19,7 +19,7 @@ private:
     char caret_symbol = '|';
     Text caret_text = Text(registers::font);
 
-    const short field_size = 91;
+    const short field_size = 86;
 
     static Vector2f mouse_world();
     bool hit(const Vector2f &) const;

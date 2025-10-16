@@ -27,7 +27,10 @@ namespace EDisk {
 
         inline std::list<Segment *> & get_sub_segments(void) noexcept {return this->sub_segments;}
         inline std::list<Segment> & get_files(void) noexcept {return this->files;}
+        inline size_t get_size(void) const noexcept {return this->size;}
         inline uintmax_t get_depth(void) const noexcept {return this->depth;}
+        inline void set_size(const size_t & size) noexcept {this->size = size;}
+        inline void set_depth(const size_t & depth) noexcept {this->depth = depth;}
         inline const std::filesystem::path & get_path(void) noexcept {return this->path;}
         inline Segment * get_parent(void) const noexcept {return this->parent;}
 

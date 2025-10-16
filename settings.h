@@ -10,7 +10,7 @@ using namespace sf;
 namespace registers {
     constexpr float PI = 3.14159265f;
     inline RenderWindow * window = nullptr;
-    inline std::wstring init_scan_path = L"C:/";
+    inline std::wstring scan_path = L"C:/";
     inline Font font = Font("../arial.ttf");
     inline Clock clock;
 }

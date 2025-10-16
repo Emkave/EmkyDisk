@@ -6,7 +6,7 @@ using namespace sf;
 using namespace EDisk;
 
 
-Segment::Segment(std::filesystem::path path, size_t size, uintmax_t depth) : depth(depth), size(size), path(std::move(path)) {
+Segment::Segment(std::filesystem::path path, size_t size, uintmax_t depth) : depth(depth), size(size), path(path) {
     // this->setFillColor(Color::White);
     // this->setRadius(60);
     // this->setPosition({300, 200});

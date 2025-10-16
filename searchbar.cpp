@@ -32,7 +32,7 @@ void searchbar::draw() const {
 
 
 void searchbar::update() {
-    this->text.setString(registers::init_scan_path.substr(this->begin_index, this->end_index+1));
+    this->text.setString(registers::scan_path.substr(this->begin_index, this->end_index+1));
 }
 
 
@@ -48,7 +48,7 @@ void searchbar::handle_event(const Event & event) {
             if (event.getIf<Event::KeyPressed>()->code == Keyboard::Key::Left) {
                 if (this->caret_index != this->begin_index) {
                     this->caret_index--;
-                    this->caret_text.setPosition({this->caret_text.getPosition().x-this->field_size/this->text.getCharacterSize()+5, this->caret_text.getPosition().y});
+                    this->caret_text.setPosition({this->caret_text.getPosition().x-this->field_size/this->text.getCharacterSize()-5, this->caret_text.getPosition().y});
                 } else {
                     if (this->begin_index) {
                         this->begin_index = this->caret_index -= 1;
@@ -74,7 +74,7 @@ void searchbar::handle_event(const Event & event) {
         this->update();
     }
 
-    if (const Vector2f mp = this->mouse_world(); this->hit(mp)) {
+    if (const Vector2f mp = searchbar::mouse_world(); this->hit(mp)) {
         if (const auto * mbe = event.getIf<Event::MouseButtonReleased>()) {
             if (mbe->button == Mouse::Button::Left) {
                 this->activated = true;
